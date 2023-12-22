@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <numeric>
 
 using namespace std;
 
@@ -120,6 +121,61 @@ int main(void)
 	Includes("Hi there, would you like to sign my petition?", "abc");
 	Includes("Hi there, would you like to sign my petition?", ",?");
 	Includes("Hi there, would you like to sign my petition?", "Hhtw ");
+
+	cout << "==============================" << endl;
+
+	cout << "=========TEST NUMERIC=========" << endl;
+
+	const int IOTA_SIZE = 10;
+	const int IOTA_INC = 50;
+
+	vector<int> iota_vec(IOTA_SIZE);
+
+	iota(begin(iota_vec), end(iota_vec), IOTA_INC);
+	cout << "This vector should start with " << IOTA_INC << " and increment by 1 for " << IOTA_SIZE << " elements:" << endl;
+	PrintVector(iota_vec, "Iota vector");
+
+	int sum = accumulate(begin(iota_vec), end(iota_vec), 0);
+
+	cout << "Sum of elements in this vector: " << sum << endl;
+
+	int odds_sum = accumulate(begin(iota_vec), end(iota_vec), 0, [&](int sum, int n) { return (is_odd(n) ? sum += n : sum); });
+
+	cout << "Sum of odd elements in this vector: " << odds_sum << endl;
+
+	cout << "==============================" << endl;
+
+	cout << "========TEST WRITE-ONLY=======" << endl;
+
+	const int NUM_FILL = 10;
+	const int NUM_FILL_N = 3;
+	const int FILL_VALUE_A = 50;
+	const int FILL_VALUE_B = 100;
+
+	vector<int> fill_vec(NUM_FILL);
+
+	fill(begin(fill_vec), end(fill_vec), FILL_VALUE_A);
+	cout << "This vector should have " << NUM_FILL << " values in it, all " << FILL_VALUE_A << ":" << endl;
+	PrintVector(fill_vec, "Fill vector");
+
+	fill_n(begin(fill_vec), NUM_FILL_N, FILL_VALUE_B);
+	cout << "This vector should have " << NUM_FILL << " values in it, the first " << NUM_FILL_N << " being " << FILL_VALUE_B << " and the rest " << FILL_VALUE_A << ":" << endl;
+	PrintVector(fill_vec, "Fill vector");
+
+	const int GENERATE_START_NUM = 1;
+
+	class SquareFunctor
+	{
+	public:
+		int operator()() { ++n; return n * n; }
+	private:
+		int n{GENERATE_START_NUM - 1};
+	};
+
+	vector<int> generate_vec(NUM_FILL);
+	generate(begin(generate_vec), end(generate_vec), SquareFunctor());
+	cout << "This vector should have " << NUM_FILL << " values in it, the squares of all numbers from " << GENERATE_START_NUM << " to " << NUM_FILL << ":" << endl;
+	PrintVector(generate_vec, "Generate vector");
 
 	cout << "==============================" << endl;
 }
